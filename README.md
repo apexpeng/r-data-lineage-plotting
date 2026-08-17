@@ -26,6 +26,41 @@ A scientific figure is never just a figure. Behind one panel may be a long depen
 
 The goal is to make figure generation **traceable, reproducible and resistant to stale intermediate files**.
 
+## 🌱 Data lineage pipeline
+
+```mermaid
+flowchart LR
+    A["🗃 Raw data"] --> B["🔽 Processing"]
+    B --> C["⚙ Analysis"]
+    C --> D["📊 Plot object"]
+    D --> E["🖼 Figure"]
+    E --> F["📁 Output"]
+```
+
+Every arrow should be reproducible.
+
+## ✅ Key features
+
+| Feature | Purpose |
+|---|---|
+| 🌿 **Explicit data lineage** | Every figure can be traced back to true source inputs |
+| 🔗 **Dependency-aware workflow** | Upstream changes propagate through downstream analysis |
+| 🧪 **Right-sized intermediates** | Save intermediate objects only when computationally justified |
+| 📊 **Modular plotting scripts** | Keep input, preparation, analysis, plotting and export visible |
+| 🧾 **Reproducible outputs** | Formal figures and tables are regenerated, not manually copied |
+
+## 🗂 Directory philosophy
+
+| Directory | Role | Typical content |
+|---|---|---|
+| `/data` | Stable source inputs | raw sequencing data, OTU/ASV tables, taxonomy, metadata, upstream omics tables |
+| `/output` | Reproducible derived objects | ordinations, network objects, model outputs, intermediate statistics |
+| `/result` | Formal deliverables | publication figures, final tables, supplementary tables |
+
+The key rule is simple:
+
+> **Derived data should not quietly become a new source of truth.**
+
 ## 📦 Installation
 
 This repository is a standalone AI Agent Skill. CC Switch is optional.
@@ -100,41 +135,6 @@ The governance Skill can then check source provenance, duplication, version conf
 ### Optional: CC Switch
 
 If you already use CC Switch for centralized multi-Agent Skill management, import this repository there instead of keeping separate physical copies. See the [`skill-install-workflow`](https://github.com/apexpeng/skill-install-workflow) README for the recommended CC Switch architecture and management model.
-
-## 🌱 Data lineage pipeline
-
-```mermaid
-flowchart LR
-    A["🗃 Raw data"] --> B["🔽 Processing"]
-    B --> C["⚙ Analysis"]
-    C --> D["📊 Plot object"]
-    D --> E["🖼 Figure"]
-    E --> F["📁 Output"]
-```
-
-Every arrow should be reproducible.
-
-## ✅ Key features
-
-| Feature | Purpose |
-|---|---|
-| 🌿 **Explicit data lineage** | Every figure can be traced back to true source inputs |
-| 🔗 **Dependency-aware workflow** | Upstream changes propagate through downstream analysis |
-| 🧪 **Right-sized intermediates** | Save intermediate objects only when computationally justified |
-| 📊 **Modular plotting scripts** | Keep input, preparation, analysis, plotting and export visible |
-| 🧾 **Reproducible outputs** | Formal figures and tables are regenerated, not manually copied |
-
-## 🗂 Directory philosophy
-
-| Directory | Role | Typical content |
-|---|---|---|
-| `/data` | Stable source inputs | raw sequencing data, OTU/ASV tables, taxonomy, metadata, upstream omics tables |
-| `/output` | Reproducible derived objects | ordinations, network objects, model outputs, intermediate statistics |
-| `/result` | Formal deliverables | publication figures, final tables, supplementary tables |
-
-The key rule is simple:
-
-> **Derived data should not quietly become a new source of truth.**
 
 ## 🚨 The failure mode this Skill tries to prevent
 
