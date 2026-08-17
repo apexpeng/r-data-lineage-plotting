@@ -28,47 +28,78 @@
 
 ## 📦 安装
 
-### 推荐：使用 CC Switch 统一管理 Skill
+本仓库是一个独立 AI Agent Skill，**不要求使用 CC Switch**。
 
-如果同时使用 Claude Code、Codex、DeepSeek Harness 等多个 Agent，推荐由 **CC Switch 统一管理 Skill**，避免在多个 Agent 目录维护重复实体副本。
+### Claude Code
 
-使用 CC Switch 官方 Deep Link 导入本 Skill：
+**macOS / Linux**
+
+```bash
+mkdir -p ~/.claude/skills
+git clone https://github.com/apexpeng/r-data-lineage-plotting.git \
+  ~/.claude/skills/r-data-lineage-plotting
+```
 
 **Windows PowerShell**
 
 ```powershell
-Start-Process "ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main"
+$target = Join-Path $HOME ".claude/skills/r-data-lineage-plotting"
+New-Item -ItemType Directory -Force (Split-Path $target -Parent) | Out-Null
+git clone https://github.com/apexpeng/r-data-lineage-plotting.git $target
 ```
 
-**macOS**
+### OpenAI Codex
+
+**macOS / Linux**
 
 ```bash
-open "ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main"
+mkdir -p ~/.codex/skills
+git clone https://github.com/apexpeng/r-data-lineage-plotting.git \
+  ~/.codex/skills/r-data-lineage-plotting
 ```
 
-也可以直接打开：
+**Windows PowerShell**
+
+```powershell
+$target = Join-Path $HOME ".codex/skills/r-data-lineage-plotting"
+New-Item -ItemType Directory -Force (Split-Path $target -Parent) | Out-Null
+git clone https://github.com/apexpeng/r-data-lineage-plotting.git $target
+```
+
+### DeepSeek Harness / shared Agent Skill 目录
+
+**macOS / Linux**
+
+```bash
+mkdir -p ~/.agents/skills
+git clone https://github.com/apexpeng/r-data-lineage-plotting.git \
+  ~/.agents/skills/r-data-lineage-plotting
+```
+
+**Windows PowerShell**
+
+```powershell
+$target = Join-Path $HOME ".agents/skills/r-data-lineage-plotting"
+New-Item -ItemType Directory -Force (Split-Path $target -Parent) | Out-Null
+git clone https://github.com/apexpeng/r-data-lineage-plotting.git $target
+```
+
+> 如果你的 Agent 使用自定义 Skill 目录，请安装到实际配置的位置。
+
+### 如果已经安装 `skill-install-workflow`
+
+可以直接对 Agent 说：
 
 ```text
-ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main
+安装这个 Skill：
+https://github.com/apexpeng/r-data-lineage-plotting.git
 ```
 
-导入后，在 **CC Switch → Skills** 中选择需要使用该 Skill 的 Agent 并完成安装/同步。多 Agent 环境推荐采用 **CC Switch 内置存储 + SymbolicLink（软链接）同步**。
+由治理 Skill 在安装前检查来源、重复、版本冲突和风险，并在安装后验证完整性。
 
-### 三个 Skill 的推荐安装顺序
+### 可选：CC Switch
 
-```text
-1. skill-install-workflow
-        ↓
-2. r-data-lineage-plotting   ← 当前 Skill
-        ↓
-3. write-human-r-code
-```
-
-推荐理由：
-
-1. **先安装 `skill-install-workflow`**：让后续 Skill 安装先经过来源、重复、版本、风险和完整性治理。
-2. **再安装 `r-data-lineage-plotting`**：先建立科研 R 项目的权威输入、目录职责与数据血缘基础。
-3. **最后安装 `write-human-r-code`**：进一步约束 R 脚本的可读性、结构与重构方式。两个 R Skill 是互补关系：前者管数据流，后者管代码结构与可维护性。
+如果你本身已经使用 CC Switch 管理多个 Agent 的 Skill，可以通过 CC Switch 导入本仓库，避免维护多份实体副本。CC Switch 的推荐架构、SymbolicLink 管理方式和三个 Skill 的推荐安装顺序，请参见 [`skill-install-workflow`](https://github.com/apexpeng/skill-install-workflow) 的 README。
 
 ## 🌱 数据血缘流水线
 
