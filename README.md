@@ -1,63 +1,217 @@
-# r-data-lineage-plotting
+<p align="center">
+  <img src="assets/banner.svg" width="100%" alt="r-data-lineage-plotting banner">
+</p>
 
-A framework for reproducible data lineage and visualization workflows in R.
+<div align="center">
 
-## Overview
+# 🌿 r-data-lineage-plotting
 
-Scientific R projects often become difficult to maintain because:
+**Every figure should know where it came from.**
 
-- intermediate files are mixed with raw data;
-- plots depend on hidden processing steps;
-- data transformations are difficult to trace;
-- changes in upstream data do not reliably propagate.
+[![R](https://img.shields.io/badge/R-Data%20Lineage-276DC3?style=flat-square&logo=r)](#)
+[![Scientific Plotting](https://img.shields.io/badge/scientific-plotting-success?style=flat-square)](#)
+[![Reproducibility](https://img.shields.io/badge/reproducibility-first-blue?style=flat-square)](#)
 
-This Skill promotes explicit data lineage and reproducible figure generation.
+**English** · [简体中文](./README.zh-CN.md)
 
-## Core Concept
+</div>
+
+---
+
+## 📊 A figure is never just a figure
+
+A final panel may look simple:
 
 ```text
-Raw data
-    ↓
-Data processing
-    ↓
-Analysis object
-    ↓
-Visualization
-    ↓
-Final figure
+Figure 5D
 ```
 
-## Design Principles
+but behind it may be:
 
-### Single source of truth
+```text
+OTU / ASV table
+→ filtering
+→ transformation
+→ model / statistics
+→ intermediate object
+→ plotting
+→ final figure
+```
 
-Raw data remain unchanged. Derived datasets should be generated through documented workflows.
+When these steps are disconnected, reproducibility disappears.
 
-### Explicit lineage
+`r-data-lineage-plotting` keeps the lineage explicit.
 
-Every result should answer:
+## 🌱 The central idea
 
-- Where did this table come from?
-- Which script generated it?
-- Which parameters were used?
+```mermaid
+flowchart LR
+    A["📦 Raw data"] --> B["🧹 Data preparation"]
+    B --> C["🧪 Analysis"]
+    C --> D["📊 Plot-ready object"]
+    D --> E["🎨 Figure"]
+    E --> F["📁 Final output"]
+```
 
-### Modular plotting
+Every arrow should be reproducible.
 
-Figure scripts should clearly define:
+## 🔍 Every result should answer four questions
 
-- input data;
-- preparation;
-- analysis;
-- visualization;
-- export.
+```mermaid
+mindmap
+  root((Figure))
+    Source
+      Raw dataset
+      Metadata
+    Processing
+      Filtering
+      Transformation
+    Analysis
+      Method
+      Parameters
+    Output
+      Script
+      Figure
+      Table
+```
 
-## Suitable For
+A researcher should be able to ask:
 
-- ecological analysis;
-- microbiome research;
-- multi-omics analysis;
-- publication-quality figures.
+> Where did this figure come from?  
+> Which script generated it?  
+> Which transformations occurred?  
+> If the source data change, will the figure change too?
 
-## Goal
+## 🗂 Data directory philosophy
 
-Make R visualization workflows reproducible, auditable, and maintainable.
+### `/data`
+
+Stable source inputs, for example:
+
+```text
+raw sequencing data
+OTU / ASV tables
+taxonomy tables
+metadata
+upstream transcriptome tables
+environmental measurements
+```
+
+### `/output`
+
+Reproducible derived data:
+
+```text
+ordination objects
+network tables
+model outputs
+intermediate statistics
+```
+
+### `/result`
+
+Formal deliverables:
+
+```text
+figures
+publication tables
+supplementary tables
+```
+
+## 🚨 The problem this Skill tries to prevent
+
+```mermaid
+flowchart TD
+    A["data/raw.csv"] --> B["analysis"]
+    B --> C["derived.csv"]
+    C --> D["manually copied derived_v2.csv"]
+    D --> E["plot_final.R"]
+    A -. changed later .-> F["❌ Figure unchanged"]
+```
+
+The figure still exists, but it may no longer represent the current source data.
+
+## ✅ Preferred pattern
+
+For a simple figure:
+
+```text
+01_plot_pcoa.R
+     ↓
+read_data
+     ↓
+prepare_data
+     ↓
+statistics
+     ↓
+plot
+```
+
+For computationally expensive analyses:
+
+```text
+prepare_network.R
+       ↓
+network object
+       ↓
+plot_network.R
+```
+
+Intermediate files should exist because the analysis requires them — not because every script automatically writes them.
+
+## 🧬 Data lineage as a dependency graph
+
+```mermaid
+flowchart TD
+    META["metadata.csv"] --> PREP["prepare_data()"]
+    OTU["otu_table.tsv"] --> PREP
+    TAX["taxonomy.tsv"] --> PREP
+
+    PREP --> PCOA["PCoA object"]
+    PREP --> NET["Network input"]
+
+    PCOA --> FIGA["Fig. 5A"]
+    NET --> FIGD["Fig. 5D"]
+    PCOA --> TAB1["Supplementary table"]
+```
+
+Change a source once. Recompute everything downstream.
+
+## 🧠 AI behavior encouraged by this Skill
+
+Before writing a plotting script, AI should ask:
+
+```text
+What are the true source data?
+        ↓
+What must be calculated?
+        ↓
+Which intermediates are worth preserving?
+        ↓
+Which outputs are formal deliverables?
+        ↓
+How should dependencies be encoded?
+```
+
+Not:
+
+```text
+Which CSV is most convenient to read right now?
+```
+
+## 🔬 Designed for scientific workflows
+
+Especially useful for:
+
+- ecology
+- microbial ecology and microbiome analysis
+- soil and environmental science
+- transcriptomics
+- metabolomics
+- multi-omics
+- publication figures
+- complex multi-panel figures
+
+## 🌿 Philosophy
+
+> **A publication figure should be the end of a reproducible data lineage — not the end of a chain of copied files.**
