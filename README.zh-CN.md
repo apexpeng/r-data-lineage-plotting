@@ -1,16 +1,14 @@
 <p align="center">
-  <img src="assets/banner.svg" width="100%" alt="r-data-lineage-plotting banner">
+  <img src="assets/banner.zh-CN.svg" width="100%" alt="r-data-lineage-plotting 中文横幅">
 </p>
 
 <div align="center">
 
-# 🌿 r-data-lineage-plotting
-
-**每一张科研图，都应该知道自己从哪里来。**
-
 [![R](https://img.shields.io/badge/R-Data%20Lineage-276DC3?style=flat-square&logo=r)](#)
-[![Scientific Plotting](https://img.shields.io/badge/scientific-plotting-success?style=flat-square)](#)
-[![Reproducibility](https://img.shields.io/badge/reproducibility-first-blue?style=flat-square)](#)
+[![Scientific Plotting](https://img.shields.io/badge/scientific-plotting-2EA44F?style=flat-square)](#)
+[![Reproducibility](https://img.shields.io/badge/reproducibility-first-0A66C2?style=flat-square)](#)
+[![AI Agent Skill](https://img.shields.io/badge/AI-Agent%20Skill-6C63FF?style=flat-square)](#)
+[![Status](https://img.shields.io/badge/status-active-2EA44F?style=flat-square)](#)
 
 [English](./README.md) · **简体中文**
 
@@ -18,113 +16,52 @@
 
 ---
 
-## 📊 一张图，从来不只是一张图
+## 📌 概述
 
-最终论文里可能只是：
+一张科研图从来不只是一张图。一个 panel 背后往往连接着源数据、筛选规则、数据转换、统计模型和多个中间分析对象。
 
-```text
-Fig. 5D
-```
+`r-data-lineage-plotting` 希望 AI 构建的 R 工作流始终保持真实来源关系：
 
-但它背后可能经历：
+> **原始数据 → 数据处理 → 分析 → 绘图对象 → 图件 → 正式输出**
 
-```text
-OTU / ASV 表
-↓
-筛选
-↓
-数据转换
-↓
-统计 / 模型
-↓
-中间分析对象
-↓
-绘图
-↓
-最终图件
-```
+目标是让科研绘图**可追溯、可复现，并避免被过期的中间文件悄悄污染**。
 
-只要其中任何一步与源数据脱节，最终图件就失去了真正的可复现性。
-
-`r-data-lineage-plotting` 就是为了让这条血缘始终清晰。
-
-## 🌱 核心思想
+## 🌱 数据血缘流水线
 
 ```mermaid
 flowchart LR
-    A["📦 原始数据"] --> B["🧹 数据整理"]
-    B --> C["🧪 分析"]
-    C --> D["📊 可绘图对象"]
-    D --> E["🎨 图件"]
+    A["🗃 原始数据"] --> B["🔽 数据处理"]
+    B --> C["⚙ 分析"]
+    C --> D["📊 绘图对象"]
+    D --> E["🖼 图件"]
     E --> F["📁 正式输出"]
 ```
 
 每一个箭头都应该可以重新执行。
 
-## 🔍 每个结果都应该回答 4 个问题
+## ✅ 核心特性
 
-```mermaid
-mindmap
-  root((科研图件))
-    来源
-      原始数据
-      Metadata
-    数据处理
-      筛选
-      转换
-    分析
-      方法
-      参数
-    输出
-      Script
-      Figure
-      Table
-```
+| 特性 | 作用 |
+|---|---|
+| 🌿 **显式数据血缘** | 每个图都能追溯回真正的源输入 |
+| 🔗 **依赖感知工作流** | 上游数据变化能够传递到下游结果 |
+| 🧪 **合理保存中间对象** | 只有在计算成本或复用需求成立时才保存 |
+| 📊 **模块化绘图脚本** | 输入、整理、分析、绘图、输出保持清晰 |
+| 🧾 **正式结果可复现** | 图和表由流程重新生成，而不是手工复制 |
 
-也就是说：
+## 🗂 目录理念
 
-> 这个图的数据来自哪里？  
-> 哪个脚本生成？  
-> 中间进行了哪些处理？  
-> 原始数据变化后，图会不会同步变化？
+| 目录 | 定位 | 典型内容 |
+|---|---|---|
+| `/data` | 稳定的源输入 | 原始测序数据、OTU/ASV、taxonomy、metadata、上游组学表 |
+| `/output` | 可重新生成的派生对象 | PCoA、网络对象、模型结果、中间统计表 |
+| `/result` | 正式交付结果 | 论文图件、正式结果表、Supplementary tables |
 
-## 🗂 数据目录原则
+核心规则很简单：
 
-### `/data`
+> **二次计算数据不能悄悄变成新的事实源。**
 
-只保存稳定、不可再生的源输入，例如：
-
-```text
-原始测序文件
-OTU / ASV table
-taxonomy
-metadata
-转录组上游结果
-环境因子
-```
-
-### `/output`
-
-保存由源数据计算得到、可重新生成的分析产物，例如：
-
-```text
-PCoA objects
-网络分析中间结果
-模型结果
-统计表
-```
-
-### `/result`
-
-保存正式交付结果，例如：
-
-```text
-论文图件
-正式结果表
-Supplementary tables
-```
-
-## 🚨 最希望避免的情况
+## 🚨 最希望避免的错误模式
 
 ```mermaid
 flowchart TD
@@ -132,12 +69,14 @@ flowchart TD
     B --> C["derived.csv"]
     C --> D["手工复制 derived_v2.csv"]
     D --> E["plot_final.R"]
-    A -. 后来发生修改 .-> F["❌ 最终图没有更新"]
+    A -. 源数据后来发生变化 .-> F["❌ 最终图保持旧状态"]
 ```
 
-这意味着图还在，但它已经不再对应当前源数据。
+图还在，但它可能已经不再代表当前的数据。
 
-## ✅ 简单图应该这样
+## ✅ 推荐模式
+
+对于简单图：
 
 ```text
 01_plot_pcoa.R
@@ -149,23 +88,11 @@ data_prepare
 statistics
      ↓
 plot
+     ↓
+save
 ```
 
-而不是默认：
-
-```text
-01_prepare_data.R
-↓
-很多 CSV
-↓
-不知道谁在读取
-↓
-最终图
-```
-
-## 🧪 复杂计算可以合理拆分
-
-网络、iCAMP 等计算成本较高的任务，可以：
+对于真正计算复杂的流程：
 
 ```text
 prepare_network.R
@@ -175,9 +102,9 @@ network object
 plot_network.R
 ```
 
-这里存在 `prepare` 是因为计算本身复杂，而不是因为所有分析都必须强行拆成 `prepare + plot`。
+这里存在 `prepare`，是因为分析确实复杂，而不是因为所有绘图都必须机械拆成 `prepare + plot`。
 
-## 🧬 数据血缘就是依赖图
+## 🧬 用依赖图理解数据血缘
 
 ```mermaid
 flowchart TD
@@ -193,28 +120,20 @@ flowchart TD
     PCOA --> TAB1["Supplementary Table"]
 ```
 
-理想状态是：
+修改一处源数据，重新运行，下游结果应随之更新。
 
-```text
-修改一处源数据
-↓
-重新运行
-↓
-所有下游结果同步变化
-```
-
-## 🧠 这个 Skill 希望 AI 在绘图之前先想
+## 🧠 AI 在绘图前应该先问
 
 ```text
 真正的源数据是什么？
         ↓
-哪些数据必须现场计算？
+哪些数据需要现场计算？
         ↓
-哪些中间结果值得保存？
+哪些中间对象值得保存？
         ↓
 哪些属于正式输出？
         ↓
-怎样保证依赖关系可追踪？
+依赖关系应该怎样编码？
 ```
 
 而不是：
@@ -223,19 +142,16 @@ flowchart TD
 现在手边哪个 CSV 最方便读取？
 ```
 
-## 🔬 适用研究
+## 🎯 适用场景
 
-尤其适用于：
-
-- 生态学
-- 微生物生态学 / 微生物组
+- 生态学与微生物生态学
+- 微生物组分析
 - 土壤与环境科学
-- 转录组
-- 代谢组
-- 多组学
-- 论文绘图
-- 多 panel 复杂科研图件
+- 转录组与代谢组
+- 多组学工作流
+- 论文级科研绘图
+- 多 panel 复杂图件
 
-## 🌿 核心理念
+---
 
 > **论文图件应该是可复现数据血缘的终点，而不是一串手工复制文件的终点。**
