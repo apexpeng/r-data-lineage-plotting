@@ -1,0 +1,4 @@
+interface:
+  display_name: "R Data Lineage and Plotting"
+  short_description: "Organize R analysis data lineage, directory hierarchy, and rerun gates by analysis module"
+  default_prompt: "Use $r-data-lineage-plotting to model this R project as a DAG rooted in authoritative inputs, keep analysis-specific preparation inside each module, and enforce traceable outputs and reruns."
