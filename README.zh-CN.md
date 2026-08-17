@@ -26,6 +26,50 @@
 
 目标是让科研绘图**可追溯、可复现，并避免被过期的中间文件悄悄污染**。
 
+## 📦 安装
+
+### 推荐：使用 CC Switch 统一管理 Skill
+
+如果同时使用 Claude Code、Codex、DeepSeek Harness 等多个 Agent，推荐由 **CC Switch 统一管理 Skill**，避免在多个 Agent 目录维护重复实体副本。
+
+使用 CC Switch 官方 Deep Link 导入本 Skill：
+
+**Windows PowerShell**
+
+```powershell
+Start-Process "ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main"
+```
+
+**macOS**
+
+```bash
+open "ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main"
+```
+
+也可以直接打开：
+
+```text
+ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main
+```
+
+导入后，在 **CC Switch → Skills** 中选择需要使用该 Skill 的 Agent 并完成安装/同步。多 Agent 环境推荐采用 **CC Switch 内置存储 + SymbolicLink（软链接）同步**。
+
+### 三个 Skill 的推荐安装顺序
+
+```text
+1. skill-install-workflow
+        ↓
+2. r-data-lineage-plotting   ← 当前 Skill
+        ↓
+3. write-human-r-code
+```
+
+推荐理由：
+
+1. **先安装 `skill-install-workflow`**：让后续 Skill 安装先经过来源、重复、版本、风险和完整性治理。
+2. **再安装 `r-data-lineage-plotting`**：先建立科研 R 项目的权威输入、目录职责与数据血缘基础。
+3. **最后安装 `write-human-r-code`**：进一步约束 R 脚本的可读性、结构与重构方式。两个 R Skill 是互补关系：前者管数据流，后者管代码结构与可维护性。
+
 ## 🌱 数据血缘流水线
 
 ```mermaid
