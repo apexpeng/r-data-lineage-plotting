@@ -26,6 +26,48 @@ A scientific figure is never just a figure. Behind one panel may be a long depen
 
 The goal is to make figure generation **traceable, reproducible and resistant to stale intermediate files**.
 
+## 📦 Installation
+
+### Recommended: manage Skills with CC Switch
+
+For a multi-agent environment, use **CC Switch as the unified Skill manager** instead of maintaining separate physical copies for Claude Code, Codex, or other agents.
+
+Import this Skill into CC Switch:
+
+**Windows PowerShell**
+
+```powershell
+Start-Process "ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main"
+```
+
+**macOS**
+
+```bash
+open "ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main"
+```
+
+Direct URI:
+
+```text
+ccswitch://v1/import?resource=skill&name=r-data-lineage-plotting&repo=apexpeng/r-data-lineage-plotting&branch=main
+```
+
+After import, open **CC Switch → Skills** and install/sync the Skill to the agents you want to use. **CC Switch built-in storage + SymbolicLink sync** is recommended for a shared local Skill library.
+
+### Recommended installation order for this Skill suite
+
+```text
+1. skill-install-workflow
+        ↓
+2. r-data-lineage-plotting   ← this Skill
+        ↓
+3. write-human-r-code
+```
+
+1. Install **`skill-install-workflow` first** so subsequent Skills are governed by duplicate, version, provenance and validation checks.
+2. Install **`r-data-lineage-plotting` second** to establish authoritative-input, directory-role and data-lineage rules for scientific R projects.
+3. Install **`write-human-r-code` third** to add human-readable coding and refactoring guidance. The two R Skills are complementary: lineage governs data flow; human-code governs script structure and readability.
+
 ## 🌱 Data lineage pipeline
 
 ```mermaid
