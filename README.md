@@ -4,13 +4,11 @@
 
 <div align="center">
 
-# 🌿 r-data-lineage-plotting
-
-**Every figure should know where it came from.**
-
 [![R](https://img.shields.io/badge/R-Data%20Lineage-276DC3?style=flat-square&logo=r)](#)
-[![Scientific Plotting](https://img.shields.io/badge/scientific-plotting-success?style=flat-square)](#)
-[![Reproducibility](https://img.shields.io/badge/reproducibility-first-blue?style=flat-square)](#)
+[![Scientific Plotting](https://img.shields.io/badge/scientific-plotting-2EA44F?style=flat-square)](#)
+[![Reproducibility](https://img.shields.io/badge/reproducibility-first-0A66C2?style=flat-square)](#)
+[![AI Agent Skill](https://img.shields.io/badge/AI-Agent%20Skill-6C63FF?style=flat-square)](#)
+[![Status](https://img.shields.io/badge/status-active-2EA44F?style=flat-square)](#)
 
 **English** · [简体中文](./README.zh-CN.md)
 
@@ -18,107 +16,52 @@
 
 ---
 
-## 📊 A figure is never just a figure
+## 📌 Overview
 
-A final panel may look simple:
+A scientific figure is never just a figure. Behind one panel may be a long dependency chain of source tables, filtering rules, transformations, models and intermediate objects.
 
-```text
-Figure 5D
-```
+`r-data-lineage-plotting` helps AI build R workflows where every result remains connected to its true source:
 
-but behind it may be:
+> **raw data → processing → analysis → plot object → figure → formal output**
 
-```text
-OTU / ASV table
-→ filtering
-→ transformation
-→ model / statistics
-→ intermediate object
-→ plotting
-→ final figure
-```
+The goal is to make figure generation **traceable, reproducible and resistant to stale intermediate files**.
 
-When these steps are disconnected, reproducibility disappears.
-
-`r-data-lineage-plotting` keeps the lineage explicit.
-
-## 🌱 The central idea
+## 🌱 Data lineage pipeline
 
 ```mermaid
 flowchart LR
-    A["📦 Raw data"] --> B["🧹 Data preparation"]
-    B --> C["🧪 Analysis"]
-    C --> D["📊 Plot-ready object"]
-    D --> E["🎨 Figure"]
-    E --> F["📁 Final output"]
+    A["🗃 Raw data"] --> B["🔽 Processing"]
+    B --> C["⚙ Analysis"]
+    C --> D["📊 Plot object"]
+    D --> E["🖼 Figure"]
+    E --> F["📁 Output"]
 ```
 
 Every arrow should be reproducible.
 
-## 🔍 Every result should answer four questions
+## ✅ Key features
 
-```mermaid
-mindmap
-  root((Figure))
-    Source
-      Raw dataset
-      Metadata
-    Processing
-      Filtering
-      Transformation
-    Analysis
-      Method
-      Parameters
-    Output
-      Script
-      Figure
-      Table
-```
+| Feature | Purpose |
+|---|---|
+| 🌿 **Explicit data lineage** | Every figure can be traced back to true source inputs |
+| 🔗 **Dependency-aware workflow** | Upstream changes propagate through downstream analysis |
+| 🧪 **Right-sized intermediates** | Save intermediate objects only when computationally justified |
+| 📊 **Modular plotting scripts** | Keep input, preparation, analysis, plotting and export visible |
+| 🧾 **Reproducible outputs** | Formal figures and tables are regenerated, not manually copied |
 
-A researcher should be able to ask:
+## 🗂 Directory philosophy
 
-> Where did this figure come from?  
-> Which script generated it?  
-> Which transformations occurred?  
-> If the source data change, will the figure change too?
+| Directory | Role | Typical content |
+|---|---|---|
+| `/data` | Stable source inputs | raw sequencing data, OTU/ASV tables, taxonomy, metadata, upstream omics tables |
+| `/output` | Reproducible derived objects | ordinations, network objects, model outputs, intermediate statistics |
+| `/result` | Formal deliverables | publication figures, final tables, supplementary tables |
 
-## 🗂 Data directory philosophy
+The key rule is simple:
 
-### `/data`
+> **Derived data should not quietly become a new source of truth.**
 
-Stable source inputs, for example:
-
-```text
-raw sequencing data
-OTU / ASV tables
-taxonomy tables
-metadata
-upstream transcriptome tables
-environmental measurements
-```
-
-### `/output`
-
-Reproducible derived data:
-
-```text
-ordination objects
-network tables
-model outputs
-intermediate statistics
-```
-
-### `/result`
-
-Formal deliverables:
-
-```text
-figures
-publication tables
-supplementary tables
-```
-
-## 🚨 The problem this Skill tries to prevent
+## 🚨 The failure mode this Skill tries to prevent
 
 ```mermaid
 flowchart TD
@@ -126,10 +69,10 @@ flowchart TD
     B --> C["derived.csv"]
     C --> D["manually copied derived_v2.csv"]
     D --> E["plot_final.R"]
-    A -. changed later .-> F["❌ Figure unchanged"]
+    A -. source changed later .-> F["❌ Figure remains stale"]
 ```
 
-The figure still exists, but it may no longer represent the current source data.
+The figure still exists — but it may no longer represent the current source data.
 
 ## ✅ Preferred pattern
 
@@ -145,9 +88,11 @@ prepare_data
 statistics
      ↓
 plot
+     ↓
+save
 ```
 
-For computationally expensive analyses:
+For a genuinely expensive workflow:
 
 ```text
 prepare_network.R
@@ -157,9 +102,9 @@ network object
 plot_network.R
 ```
 
-Intermediate files should exist because the analysis requires them — not because every script automatically writes them.
+The distinction is intentional: intermediate files exist because the analysis needs them, not because every script automatically writes them.
 
-## 🧬 Data lineage as a dependency graph
+## 🧬 Dependency graph thinking
 
 ```mermaid
 flowchart TD
@@ -177,16 +122,14 @@ flowchart TD
 
 Change a source once. Recompute everything downstream.
 
-## 🧠 AI behavior encouraged by this Skill
-
-Before writing a plotting script, AI should ask:
+## 🧠 What AI should ask before plotting
 
 ```text
 What are the true source data?
         ↓
 What must be calculated?
         ↓
-Which intermediates are worth preserving?
+Which intermediate objects are worth preserving?
         ↓
 Which outputs are formal deliverables?
         ↓
@@ -199,19 +142,16 @@ Not:
 Which CSV is most convenient to read right now?
 ```
 
-## 🔬 Designed for scientific workflows
+## 🎯 Suitable for
 
-Especially useful for:
-
-- ecology
-- microbial ecology and microbiome analysis
+- ecology and microbial ecology
+- microbiome analysis
 - soil and environmental science
-- transcriptomics
-- metabolomics
-- multi-omics
-- publication figures
-- complex multi-panel figures
+- transcriptomics and metabolomics
+- multi-omics workflows
+- publication-quality figures
+- complex multi-panel scientific figures
 
-## 🌿 Philosophy
+---
 
 > **A publication figure should be the end of a reproducible data lineage — not the end of a chain of copied files.**
